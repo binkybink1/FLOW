@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dusk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FLOW Method — Quick Start</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    (function () {
+      var t = localStorage.getItem('flow-theme') || 'dusk';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sage-5: oklch(35% 0.085 150);
+      --sage-4: oklch(44% 0.090 150);
+      --sage-3: oklch(56% 0.100 152);
+      --sage-2: oklch(70% 0.090 154);
+      --sage-1: oklch(87% 0.055 155);
+      --gold-5: oklch(38% 0.080 80);
+      --gold-4: oklch(52% 0.090 82);
+      --gold-3: oklch(66% 0.095 84);
+      --gold-2: oklch(76% 0.080 84);
+      --gold-1: oklch(89% 0.050 86);
+      --slate-4: oklch(44% 0.040 245);
+      --slate-3: oklch(60% 0.030 245);
+      --slate-2: oklch(72% 0.025 245);
+      --violet-4: oklch(40% 0.080 280);
+      --violet-3: oklch(55% 0.090 280);
+      --violet-2: oklch(68% 0.075 280);
+      --red-3: oklch(58% 0.095 26);
+      --red-2: oklch(70% 0.080 26);
+    }
+
+    :root, [data-theme="dusk"] {
+      --bg-0: oklch(17% 0.020 240);
+      --bg-1: oklch(21% 0.020 240);
+      --bg-2: oklch(25% 0.020 240);
+      --bg-3: oklch(29% 0.018 240);
+      --bg-4: oklch(34% 0.016 240);
+      --bg-night: oklch(13% 0.018 260);
+      --ink-1: oklch(93% 0.008 240);
+      --ink-2: oklch(78% 0.010 240);
+      --ink-3: oklch(62% 0.012 240);
+      --ink-4: oklch(46% 0.012 240);
+      --line: oklch(28% 0.016 240);
+      --accent: var(--sage-3);
+      --accent-fg: oklch(14% 0.010 240);
+    }
+
+    [data-theme="morning"] {
+      --bg-0: oklch(98.5% 0.010 85);
+      --bg-1: oklch(97% 0.012 85);
+      --bg-2: oklch(95% 0.014 85);
+      --bg-3: oklch(93% 0.015 85);
+      --bg-4: oklch(90% 0.016 85);
+      --bg-night: oklch(18% 0.020 240);
+      --ink-1: oklch(20% 0.018 240);
+      --ink-2: oklch(34% 0.016 240);
+      --ink-3: oklch(50% 0.014 240);
+      --ink-4: oklch(66% 0.010 240);
+      --line: oklch(86% 0.012 85);
+      --accent: var(--sage-4);
+      --accent-fg: oklch(98% 0.005 85);
+    }
+
+    html { font-size: 15px; scroll-behavior: smooth; }
+    body {
+      background: var(--bg-0); color: var(--ink-1);
+      font-family: 'Geist', -apple-system, sans-serif;
+      min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: color-mix(in oklch, var(--bg-0) 88%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      padding: 0 48px;
+      display: flex; align-items: center; justify-content: space-between; height: 52px;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+    .nav-left { display: flex; align-items: center; gap: 14px; }
+    .nav-mark { width: 22px; height: 22px; flex-shrink: 0; }
+    .nav-brand {
+      font-size: 13px; font-weight: 600; letter-spacing: 0.10em;
+      text-transform: uppercase; color: var(--ink-1); transition: color 0.3s;
+    }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .nav-link { font-size: 12px; color: var(--ink-3); text-decoration: none; letter-spacing: 0.04em; transition: color 0.2s; }
+    .nav-link:hover { color: var(--ink-1); }
+    .theme-toggle {
+      display: flex; align-items: center;
+      background: var(--bg-2); border: 1px solid var(--line); border-radius: 6px;
+      padding: 3px; gap: 2px; transition: background-color 0.3s, border-color 0.3s;
+    }
+    .theme-btn {
+      font-family: 'Geist', sans-serif; font-size: 10px; letter-spacing: 0.08em;
+      text-transform: uppercase; font-weight: 500;
+      padding: 4px 12px; border-radius: 4px;
+      cursor: pointer; border: none; background: transparent; color: var(--ink-4);
+      transition: background-color 0.2s, color 0.2s;
+    }
+    .theme-btn.active { background: var(--bg-4); color: var(--ink-1); }
+
+    /* LAYOUT */
+    .page { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+    .divider { border: none; border-top: 1px solid var(--line); transition: border-color 0.3s; }
+
+    /* HERO */
+    .hero-qs {
+      padding: 80px 0 56px;
+      max-width: 760px;
+    }
+    .hero-eyebrow {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 20px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: block; width: 20px; height: 1px; background: var(--accent);
+    }
+    .hero-title {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: clamp(40px, 5vw, 60px);
+      font-weight: 300; line-height: 1.08; color: var(--ink-1);
+      margin-bottom: 22px;
+    }
+    .hero-title em { font-style: italic; }
+    .hero-body {
+      font-size: 15px; line-height: 1.75; color: var(--ink-3);
+      max-width: 600px;
+    }
+    .hero-body p + p { margin-top: 12px; }
+
+    /* SECTION */
+    .section { padding: 64px 0; }
+    .section-head { margin-bottom: 40px; }
+    .s-eyebrow {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--ink-4); margin-bottom: 14px;
+      transition: color 0.3s;
+    }
+    .s-title {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: clamp(26px, 3vw, 36px);
+      font-weight: 300; line-height: 1.2; color: var(--ink-1);
+      transition: color 0.3s;
+    }
+    .s-title em { font-style: italic; }
+    .s-body { margin-top: 12px; font-size: 14px; line-height: 1.8; color: var(--ink-3); max-width: 620px; transition: color 0.3s; }
+
+    code { font-family: 'Geist Mono', monospace; }
+
+    /* STEP NUMBER PILL */
+    .step-pill {
+      display: inline-block;
+      font-family: 'Geist Mono', monospace; font-size: 10px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent-fg); background: var(--accent);
+      padding: 3px 10px; border-radius: 4px;
+      margin-bottom: 14px;
+    }
+
+    /* INSTALL BLOCK */
+    .install-block {
+      background: var(--bg-1); border: 1px solid var(--line); border-radius: 10px;
+      padding: 28px 32px;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+    .install-step { display: flex; gap: 18px; padding: 12px 0; align-items: flex-start; }
+    .install-step + .install-step { border-top: 1px solid var(--line); }
+    .install-num {
+      font-family: 'Newsreader', Georgia, serif; font-size: 22px; font-weight: 300;
+      color: var(--accent); line-height: 1; min-width: 28px;
+    }
+    .install-text { font-size: 14px; line-height: 1.7; color: var(--ink-2); }
+    .install-text code {
+      font-size: 12px; background: var(--bg-3);
+      padding: 2px 7px; border-radius: 3px; color: var(--ink-1);
+    }
+
+    /* PATH PICKER */
+    .path-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); }
+    .path-card {
+      background: var(--bg-1); padding: 28px 28px;
+      transition: background-color 0.3s, border-color 0.3s;
+      border-radius: 0;
+    }
+    .path-tag {
+      font-family: 'Geist Mono', monospace; font-size: 10px; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .path-name {
+      font-family: 'Newsreader', Georgia, serif; font-size: 22px; font-weight: 300;
+      color: var(--ink-1); margin-bottom: 8px; line-height: 1.2;
+    }
+    .path-name em { font-style: italic; }
+    .path-when { font-size: 12px; line-height: 1.6; color: var(--ink-4); margin-bottom: 14px; }
+    .path-body { font-size: 13px; line-height: 1.7; color: var(--ink-3); }
+    .path-cmd {
+      display: inline-block; font-family: 'Geist Mono', monospace; font-size: 12px;
+      background: var(--bg-3); color: var(--ink-1);
+      padding: 4px 10px; border-radius: 4px; margin-top: 14px;
+    }
+
+    /* PHASE WALKTHROUGH (interactive infographic) */
+    .phase-walk { display: grid; grid-template-columns: 280px 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+    .phase-rail { background: var(--bg-1); padding: 8px; transition: background-color 0.3s; }
+    .phase-card {
+      width: 100%; text-align: left;
+      background: transparent; border: 1px solid transparent;
+      border-radius: 8px; padding: 14px 16px;
+      cursor: pointer; color: var(--ink-2);
+      font-family: 'Geist', sans-serif;
+      display: flex; align-items: center; gap: 14px;
+      transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .phase-card:hover { background: var(--bg-2); }
+    .phase-card.active { background: var(--bg-2); border-color: var(--accent); }
+    .phase-bullet {
+      font-family: 'Newsreader', Georgia, serif; font-size: 22px; font-weight: 300;
+      color: var(--ink-4); min-width: 32px;
+      transition: color 0.2s;
+    }
+    .phase-card.active .phase-bullet { color: var(--accent); }
+    .phase-info { flex: 1; }
+    .phase-key { font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 3px; transition: color 0.2s; }
+    .phase-name { font-size: 14px; font-weight: 500; color: var(--ink-1); transition: color 0.2s; }
+    .phase-card.active .phase-key { color: var(--accent); }
+
+    .phase-detail-wrap { background: var(--bg-1); padding: 36px 40px; min-height: 360px; transition: background-color 0.3s; position: relative; }
+    .phase-detail { display: none; animation: fadeIn 0.35s ease; }
+    .phase-detail.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .phase-detail h3 {
+      font-family: 'Newsreader', Georgia, serif; font-size: 28px; font-weight: 300;
+      color: var(--ink-1); line-height: 1.2; margin-bottom: 4px;
+    }
+    .phase-detail h3 em { font-style: italic; }
+    .phase-detail .pd-eyebrow {
+      font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+    }
+    .phase-detail .pd-body { font-size: 14px; line-height: 1.75; color: var(--ink-3); margin-top: 18px; max-width: 540px; }
+    .phase-detail .pd-tip {
+      margin-top: 22px; padding: 14px 18px;
+      background: var(--bg-2); border-left: 2px solid var(--accent);
+      font-size: 13px; line-height: 1.65; color: var(--ink-2);
+    }
+    .phase-detail .pd-tip strong { color: var(--ink-1); font-weight: 500; }
+    .phase-detail .pd-tip code { background: var(--bg-3); color: var(--ink-1); padding: 1px 6px; border-radius: 3px; font-size: 12px; }
+    .phase-detail .pd-list { margin-top: 18px; list-style: none; }
+    .phase-detail .pd-list li {
+      font-size: 13px; line-height: 1.7; color: var(--ink-2);
+      padding: 6px 0; padding-left: 18px; position: relative;
+    }
+    .phase-detail .pd-list li::before {
+      content: ''; position: absolute; left: 0; top: 13px;
+      width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+    }
+
+    /* DUMP EXAMPLES (tabbed) */
+    .dump-tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--line); }
+    .dump-tab {
+      background: transparent; border: none;
+      padding: 10px 18px; cursor: pointer;
+      font-family: 'Geist', sans-serif; font-size: 12px; letter-spacing: 0.06em;
+      color: var(--ink-3); border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .dump-tab:hover { color: var(--ink-1); }
+    .dump-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    .dump-panel { display: none; }
+    .dump-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+    .dump-side {
+      background: var(--bg-1); padding: 28px 32px;
+      transition: background-color 0.3s;
+    }
+    .dump-side .dump-label {
+      font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--ink-4); margin-bottom: 14px;
+    }
+    .dump-text {
+      font-family: 'Geist Mono', monospace; font-size: 12px; line-height: 1.75;
+      color: var(--ink-2); white-space: pre-wrap; word-wrap: break-word;
+    }
+    .dump-extracted { font-family: 'Geist', sans-serif; font-size: 13px; line-height: 1.7; color: var(--ink-2); }
+    .dump-extracted .x-field { display: flex; gap: 10px; padding: 5px 0; border-bottom: 1px dashed var(--line); }
+    .dump-extracted .x-field:last-child { border-bottom: none; }
+    .dump-extracted .x-key {
+      font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.06em;
+      color: var(--ink-4); min-width: 100px; flex-shrink: 0;
+    }
+    .dump-extracted .x-val { color: var(--ink-2); }
+    .dump-extracted .x-val em { font-style: italic; color: var(--ink-4); }
+
+    /* CHEAT SHEET TABLE */
+    .cheat-table { width: 100%; border-collapse: collapse; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+    .cheat-table th {
+      background: var(--bg-2); text-align: left; padding: 12px 18px;
+      font-family: 'Geist Mono', monospace; font-size: 10px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-4);
+      border-bottom: 1px solid var(--line);
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .cheat-table td {
+      background: var(--bg-1); padding: 13px 18px;
+      font-size: 13px; color: var(--ink-2);
+      border-bottom: 1px solid var(--line); vertical-align: top;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .cheat-table tr:last-child td { border-bottom: none; }
+    .cheat-table code {
+      font-family: 'Geist Mono', monospace; font-size: 12px; color: var(--ink-1);
+      background: var(--bg-3); padding: 2px 6px; border-radius: 3px;
+    }
+    .cheat-table .when { color: var(--ink-4); font-style: italic; }
+
+    /* ARTIFACTS GRID */
+    .art-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+    .art-cell {
+      background: var(--bg-1); padding: 22px 22px;
+      transition: background-color 0.3s;
+    }
+    .art-icon {
+      font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 10px;
+    }
+    .art-name {
+      font-family: 'Geist Mono', monospace; font-size: 13px; font-weight: 500;
+      color: var(--ink-1); margin-bottom: 6px;
+    }
+    .art-desc { font-size: 12px; line-height: 1.65; color: var(--ink-3); }
+
+    /* CTA STRIP */
+    .cta-strip {
+      background: var(--bg-1); border: 1px solid var(--line); border-radius: 12px;
+      padding: 36px 40px; display: flex; align-items: center; justify-content: space-between; gap: 32px;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+    .cta-text { flex: 1; }
+    .cta-text h4 {
+      font-family: 'Newsreader', Georgia, serif; font-size: 22px; font-weight: 300;
+      color: var(--ink-1); margin-bottom: 6px;
+    }
+    .cta-text p { font-size: 13px; color: var(--ink-3); }
+    .btn-primary {
+      font-size: 13px; font-weight: 500; letter-spacing: 0.04em;
+      background: var(--accent); color: var(--accent-fg);
+      border: none; border-radius: 6px; padding: 12px 24px; cursor: pointer;
+      text-decoration: none; display: inline-block; transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-ghost {
+      font-size: 13px; color: var(--ink-3);
+      background: transparent; border: 1px solid var(--line);
+      border-radius: 6px; padding: 11px 20px; cursor: pointer;
+      text-decoration: none; display: inline-block; margin-left: 8px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .btn-ghost:hover { color: var(--ink-1); border-color: var(--ink-4); }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--line); padding: 32px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: border-color 0.3s;
+    }
+    .footer-left { display: flex; align-items: center; gap: 10px; }
+    .footer-brand { font-size: 12px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-3); transition: color 0.3s; }
+    .footer-right { font-size: 12px; color: var(--ink-4); transition: color 0.3s; }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .page { padding: 0 20px; }
+      .path-grid { grid-template-columns: 1fr; }
+      .phase-walk { grid-template-columns: 1fr; }
+      .dump-panel.active { grid-template-columns: 1fr; }
+      .art-grid { grid-template-columns: 1fr 1fr; }
+      .cta-strip { flex-direction: column; align-items: flex-start; gap: 18px; padding: 28px 24px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <svg class="nav-mark" viewBox="0 0 92 92" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <mask id="nm">
+          <rect width="92" height="92" fill="white"/>
+          <circle cx="46" cy="46" r="26" fill="black"/>
+          <rect x="6" y="14" width="22" height="10" transform="rotate(-45 17 19)" fill="black"/>
+        </mask>
+      </defs>
+      <circle cx="46" cy="46" r="46" fill="var(--accent)" mask="url(#nm)"/>
+    </svg>
+    <span class="nav-brand">FLOW · Quick Start</span>
+  </div>
+  <div class="nav-right">
+    <a href="#install" class="nav-link">Install</a>
+    <a href="#phases" class="nav-link">The phases</a>
+    <a href="#dumps" class="nav-link">Examples</a>
+    <a href="#cheat" class="nav-link">Cheat sheet</a>
+    <div class="theme-toggle">
+      <button class="theme-btn" id="btn-dusk" onclick="setTheme('dusk')">Dusk</button>
+      <button class="theme-btn" id="btn-morning" onclick="setTheme('morning')">Morning</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <div class="page">
+    <div class="hero-qs">
+      <div class="hero-eyebrow">Quick Start</div>
+      <h1 class="hero-title">Five minutes from install<br><em>to flow.</em></h1>
+      <div class="hero-body">
+        <p>This is the fastest path through the FLOW Method. Install the plugin, run one command, watch chaos become a structured project, then settle into the daily rhythm. No prior setup. No knowing what your "stack" is.</p>
+        <p>Click through the phases below and look at the dump examples to see what the method feels like before you start.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 01 INSTALL -->
+  <div class="page" id="install">
+    <div class="section">
+      <div class="section-head">
+        <span class="step-pill">Step 01</span>
+        <h2 class="s-title">Install <em>the plugin.</em></h2>
+        <p class="s-body">FLOW runs inside Claude Code or CoWork. The plugin file is a single <code style="font-family:'Geist Mono',monospace;font-size:13px;background:var(--bg-2);padding:2px 6px;border-radius:3px">.plugin</code> archive — installation takes about 30 seconds.</p>
+      </div>
+      <div class="install-block">
+        <div class="install-step">
+          <div class="install-num">1</div>
+          <div class="install-text">Download <code>flow.plugin</code> from the FLOW site or the project repo. Save it anywhere you can find it.</div>
+        </div>
+        <div class="install-step">
+          <div class="install-num">2</div>
+          <div class="install-text">Open Claude Code or CoWork. Find the plugin panel (Settings → Plugins, or the plugin icon in the sidebar).</div>
+        </div>
+        <div class="install-step">
+          <div class="install-num">3</div>
+          <div class="install-text">Drag <code>flow.plugin</code> into the panel. Click <em>Save plugin</em>. It validates and installs in a few seconds.</div>
+        </div>
+        <div class="install-step">
+          <div class="install-num">4</div>
+          <div class="install-text">Open a new chat. Type <code>/spinup</code> — if the command autocompletes, you are installed.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 02 PICK YOUR PATH -->
+  <div class="page" id="paths">
+    <div class="section">
+      <div class="section-head">
+        <span class="step-pill">Step 02</span>
+        <h2 class="s-title">Pick your <em>starting point.</em></h2>
+        <p class="s-body">FLOW gives you three ways to start a project. Pick the one that matches what you actually have — not what you think you should have.</p>
+      </div>
+      <div class="path-grid">
+        <div class="path-card">
+          <div class="path-tag">Path A · Default</div>
+          <div class="path-name">You have <em>chaos.</em></div>
+          <div class="path-when">Scattered inputs. Half-formed idea. You don't yet know the stack, the deadline, or even the name.</div>
+          <div class="path-body">Open an inbox and dump whatever you have. Repeat across as many sessions as you want. FLOW listens without asking questions.</div>
+          <span class="path-cmd">/spinup</span>
+        </div>
+        <div class="path-card">
+          <div class="path-tag">Path B</div>
+          <div class="path-name">You have an idea, <em>but it's unstructured.</em></div>
+          <div class="path-when">You can talk about it in prose, just not in bullet points.</div>
+          <div class="path-body">Brain-dump the whole idea in one shot. FLOW listens, then distills it into a clean <code>product-brief.md</code>.</div>
+          <span class="path-cmd">/project-strategy</span>
+        </div>
+        <div class="path-card">
+          <div class="path-tag">Path C</div>
+          <div class="path-name">You know <em>the shape.</em></div>
+          <div class="path-when">Name, stack, deadline — all in your head. You want the scaffold right now.</div>
+          <div class="path-body">Structured Q&amp;A. FLOW asks four questions and scaffolds immediately.</div>
+          <span class="path-cmd">/new-project</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 03 THE FOUR PHASES (interactive infographic) -->
+  <div class="page" id="phases">
+    <div class="section">
+      <div class="section-head">
+        <span class="step-pill">Step 03</span>
+        <h2 class="s-title">The four phases <em>(click through).</em></h2>
+        <p class="s-body">Path A — chaos — is the FLOW Method default. The methodology runs in four phases: chaos, spinup, crystallize, flow. Click each card on the left to see what to do in that phase.</p>
+      </div>
+
+      <div class="phase-walk">
+
+        <div class="phase-rail">
+          <button class="phase-card active" data-phase="chaos">
+            <div class="phase-bullet">01</div>
+            <div class="phase-info">
+              <div class="phase-key">Chaos</div>
+              <div class="phase-name">You arrive scattered</div>
+            </div>
+          </button>
+          <button class="phase-card" data-phase="spinup">
+            <div class="phase-bullet">02</div>
+            <div class="phase-info">
+              <div class="phase-key">Spinup</div>
+              <div class="phase-name">Open an inbox, dump</div>
+            </div>
+          </button>
+          <button class="phase-card" data-phase="crystallize">
+            <div class="phase-bullet">03</div>
+            <div class="phase-info">
+              <div class="phase-key">Crystallize</div>
+              <div class="phase-name">Structure on your schedule</div>
+            </div>
+          </button>
+          <button class="phase-card" data-phase="flow">
+            <div class="phase-bullet">04</div>
+            <div class="phase-info">
+              <div class="phase-key">Flow</div>
+              <div class="phase-name">Daily work, daily rituals</div>
+            </div>
+          </button>
+        </div>
+
+        <div class="phase-detail-wrap">
+
+          <div class="phase-detail active" id="detail-chaos">
+            <div class="pd-eyebrow">Phase 01 · Chaos</div>
+            <h3>You arrive <em>scattered.</em></h3>
+            <p class="pd-body">The idea is half-formed. Screenshots, a half-baked Notion doc, a few links, voice notes, references. You don't know enough yet to answer "what stack" or "what deadline." Most methodologies want you to know. FLOW says don't pretend you do.</p>
+            <ul class="pd-list">
+              <li>You have an itch for a product but no plan</li>
+              <li>Inputs are scattered across browser tabs, Notes, Slack DMs</li>
+              <li>You've been thinking about it for weeks, never sat down</li>
+              <li>You can describe it differently each time you mention it</li>
+            </ul>
+            <div class="pd-tip"><strong>Do this:</strong> open Claude. Type <code>/spinup</code>. That moves you to phase 02.</div>
+          </div>
+
+          <div class="phase-detail" id="detail-spinup">
+            <div class="pd-eyebrow">Phase 02 · Spinup</div>
+            <h3>Open an inbox <em>and dump.</em></h3>
+            <p class="pd-body">Run <code>/spinup</code> and FLOW opens a chaos inbox in your current folder. Drop anything — text, files, screenshots, URLs. Repeat as many times as you want, across as many sessions as you want. FLOW captures verbatim, never asks questions, and writes a one-line tally each time so you know what it heard.</p>
+            <ul class="pd-list">
+              <li>Type free text and hit send. That's a dump.</li>
+              <li>Attach a wireframe screenshot, a competitor URL, a draft doc</li>
+              <li>Come back tomorrow and run <code>/spinup</code> again with more thoughts</li>
+              <li>Use <code>/spinup show</code> to peek at the running picture without adding</li>
+            </ul>
+            <div class="pd-tip"><strong>What you do NOT do:</strong> answer questions, fill in fields, name the project, pick a stack. FLOW will surface those at crystallize time, not now.</div>
+          </div>
+
+          <div class="phase-detail" id="detail-crystallize">
+            <div class="pd-eyebrow">Phase 03 · Crystallize</div>
+            <h3>Structure <em>on your schedule.</em></h3>
+            <p class="pd-body">When the picture feels clear enough, run <code>/crystallize</code>. FLOW reads the inbox, surfaces contradictions and inferred fields, asks for the blocking gaps (project name, audience or problem), then scaffolds the full project: brief, hub JSON, dashboard HTML, CLAUDE.md, folder structure. The raw chaos archives into the project for permanent reference.</p>
+            <ul class="pd-list">
+              <li>You decide when ready — could be one dump, could be fifteen</li>
+              <li>FLOW asks for the project name if it could not infer one</li>
+              <li>Eight artifacts get created atomically — all or nothing</li>
+              <li>Use <code>/crystallize dry-run</code> to preview what would be created</li>
+            </ul>
+            <div class="pd-tip"><strong>The chaos is preserved.</strong> The original inbox moves to <code>_archive/kickoff-inbox/</code> inside the new project folder. You can always go back to the raw dumps.</div>
+          </div>
+
+          <div class="phase-detail" id="detail-flow">
+            <div class="pd-eyebrow">Phase 04 · Flow</div>
+            <h3>Daily work, <em>daily rituals.</em></h3>
+            <p class="pd-body">The project is real. The hub is your single source of truth. Six skills handle the day-to-day on natural language — no forms, no spreadsheets. The methodology stops being something you think about and starts being how you work.</p>
+            <ul class="pd-list">
+              <li><code>morning kickoff</code> reads the hub and proposes today's top three</li>
+              <li><code>note: anything</code> routes mid-session captures to the right place</li>
+              <li><code>session close</code> logs everything and syncs the dashboard</li>
+              <li><code>evening research</code> queues research for tomorrow's kickoff</li>
+              <li><code>doc sync</code> cascades decisions through tracked docs</li>
+              <li><code>generate gantt</code> builds a timeline from your strategy docs</li>
+            </ul>
+            <div class="pd-tip"><strong>You stay in flow.</strong> No system maintenance time. The rituals fit between the work, not on top of it.</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 04 DUMP EXAMPLES -->
+  <div class="page" id="dumps">
+    <div class="section">
+      <div class="section-head">
+        <span class="step-pill">Step 04</span>
+        <h2 class="s-title">What chaos <em>actually looks like.</em></h2>
+        <p class="s-body">FLOW handles any project type. Here are real dumps for four different kinds of project, plus what FLOW extracts on the back end. Click a tab to see each.</p>
+      </div>
+
+      <div class="dump-tabs">
+        <button class="dump-tab active" data-dump="software">Software app</button>
+        <button class="dump-tab" data-dump="marketing">Marketing campaign</button>
+        <button class="dump-tab" data-dump="creative">Creative piece</button>
+        <button class="dump-tab" data-dump="research">Research study</button>
+      </div>
+
+      <div class="dump-panel active" id="dump-software">
+        <div class="dump-side">
+          <div class="dump-label">What you drop into /spinup</div>
+<div class="dump-text">/spinup
+i want to build a small app that helps PMs spot good
+tickets in jira without wading through the noise. think
+inbox-zero but for jira queues. attached: my notion notes
+on the idea and a wireframe sketch.
+
+competitors are linear (closest), height, things like
+that. probably nextjs since i know it.
+
+want to ship a paid v1 in 6 weeks. $15/mo.
+let's call it Filter.</div>
+        </div>
+        <div class="dump-side">
+          <div class="dump-label">What FLOW extracts</div>
+          <div class="dump-extracted">
+            <div class="x-field"><div class="x-key">name</div><div class="x-val">Filter</div></div>
+            <div class="x-field"><div class="x-key">type</div><div class="x-val">software <em>(inferred)</em></div></div>
+            <div class="x-field"><div class="x-key">audience</div><div class="x-val">PMs who manage Jira queues</div></div>
+            <div class="x-field"><div class="x-key">problem</div><div class="x-val">Spotting good tickets in noisy Jira queues — inbox-zero for Jira</div></div>
+            <div class="x-field"><div class="x-key">stack</div><div class="x-val">Next.js <em>(considering)</em></div></div>
+            <div class="x-field"><div class="x-key">competitors</div><div class="x-val">Linear, Height</div></div>
+            <div class="x-field"><div class="x-key">deadline</div><div class="x-val">6 weeks (v1 paid launch)</div></div>
+            <div class="x-field"><div class="x-key">pricing</div><div class="x-val">$15/mo</div></div>
+            <div class="x-field"><div class="x-key">ready</div><div class="x-val">✓ ready to crystallize</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dump-panel" id="dump-marketing">
+        <div class="dump-side">
+          <div class="dump-label">What you drop into /spinup</div>
+<div class="dump-text">/spinup
+launching the new feature in march. needs a 4-week
+campaign. audience is solo founders on twitter and
+linkedin. tone is plainspoken, not bro-vc.
+
+deliverables: 12 tweets, 4 linkedin posts, 1 demo
+video, an email to my list (~2k), maybe a podcast spot.
+
+no paid ads. organic only. budget is ~$500 for the
+video, that's it. campaign name: SoloLaunch.</div>
+        </div>
+        <div class="dump-side">
+          <div class="dump-label">What FLOW extracts</div>
+          <div class="dump-extracted">
+            <div class="x-field"><div class="x-key">name</div><div class="x-val">SoloLaunch</div></div>
+            <div class="x-field"><div class="x-key">type</div><div class="x-val">marketing <em>(inferred)</em></div></div>
+            <div class="x-field"><div class="x-key">audience</div><div class="x-val">Solo founders on Twitter and LinkedIn</div></div>
+            <div class="x-field"><div class="x-key">goal</div><div class="x-val">Launch new feature with organic-only campaign</div></div>
+            <div class="x-field"><div class="x-key">channels</div><div class="x-val">Twitter, LinkedIn, newsletter (~2k), podcast spot</div></div>
+            <div class="x-field"><div class="x-key">deliverables</div><div class="x-val">12 tweets, 4 LI posts, 1 demo video, 1 newsletter</div></div>
+            <div class="x-field"><div class="x-key">tone</div><div class="x-val">Plainspoken, not bro-VC</div></div>
+            <div class="x-field"><div class="x-key">budget</div><div class="x-val">~$500 (video only)</div></div>
+            <div class="x-field"><div class="x-key">non-goals</div><div class="x-val">No paid ads</div></div>
+            <div class="x-field"><div class="x-key">deadline</div><div class="x-val">4-week campaign, launches in March</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dump-panel" id="dump-creative">
+        <div class="dump-side">
+          <div class="dump-label">What you drop into /spinup</div>
+<div class="dump-text">/spinup
+writing a novella. ~30k words. literary fiction.
+narrator is a 40yo woman who quietly leaves her
+marriage in chapter 1 and the rest of the book is
+the next year of her life.
+
+structural inspirations: claire keegan, mary lawson,
+small things like these specifically.
+
+setting: a coastal town in maine, late autumn.
+
+no agent yet. plan to query indie literary publishers.
+working title: After November.
+
+writing target: 1k/day, mon-fri, finish first draft by
+end of february.</div>
+        </div>
+        <div class="dump-side">
+          <div class="dump-label">What FLOW extracts</div>
+          <div class="dump-extracted">
+            <div class="x-field"><div class="x-key">name</div><div class="x-val">After November</div></div>
+            <div class="x-field"><div class="x-key">type</div><div class="x-val">creative <em>(inferred)</em></div></div>
+            <div class="x-field"><div class="x-key">medium</div><div class="x-val">Literary fiction novella, ~30k words</div></div>
+            <div class="x-field"><div class="x-key">audience</div><div class="x-val">Literary fiction readers</div></div>
+            <div class="x-field"><div class="x-key">purpose</div><div class="x-val">Novella exploring a 40yo woman's year after quietly leaving her marriage</div></div>
+            <div class="x-field"><div class="x-key">setting</div><div class="x-val">Coastal Maine, late autumn</div></div>
+            <div class="x-field"><div class="x-key">references</div><div class="x-val">Claire Keegan (Small Things Like These), Mary Lawson</div></div>
+            <div class="x-field"><div class="x-key">cadence</div><div class="x-val">1k words/day, Mon–Fri</div></div>
+            <div class="x-field"><div class="x-key">deadline</div><div class="x-val">First draft by end of February</div></div>
+            <div class="x-field"><div class="x-key">distribution</div><div class="x-val">Indie literary publishers, no agent yet</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dump-panel" id="dump-research">
+        <div class="dump-side">
+          <div class="dump-label">What you drop into /spinup</div>
+<div class="dump-text">/spinup
+research question: do solo founders who write publicly
+ship faster than ones who don't.
+
+methodology: qualitative. 15 interviews. structured
+guide. ~45 mins each. recorded + transcribed.
+
+target sample: 8 public writers (twitter, substack,
+blog), 7 non-public. all 1-3 years into building
+something solo.
+
+deliverable: a written synthesis. 5k words. maybe a
+talk later.
+
+deadline: interviews done by june 30, write-up by
+august 1.
+
+attached: interview-guide-draft.md</div>
+        </div>
+        <div class="dump-side">
+          <div class="dump-label">What FLOW extracts</div>
+          <div class="dump-extracted">
+            <div class="x-field"><div class="x-key">name</div><div class="x-val">Public Writers Ship Faster (working title)</div></div>
+            <div class="x-field"><div class="x-key">type</div><div class="x-val">research <em>(inferred)</em></div></div>
+            <div class="x-field"><div class="x-key">question</div><div class="x-val">Do solo founders who write publicly ship faster?</div></div>
+            <div class="x-field"><div class="x-key">methodology</div><div class="x-val">Qualitative, 15 structured interviews, recorded + transcribed</div></div>
+            <div class="x-field"><div class="x-key">sample</div><div class="x-val">8 public writers, 7 non-public; 1–3 years solo</div></div>
+            <div class="x-field"><div class="x-key">deliverable</div><div class="x-val">~5k word written synthesis (talk optional later)</div></div>
+            <div class="x-field"><div class="x-key">surfaces</div><div class="x-val">interview-guide-draft.md (attached)</div></div>
+            <div class="x-field"><div class="x-key">deadlines</div><div class="x-val">Interviews by June 30, write-up by August 1</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 05 WHAT YOU GET -->
+  <div class="page">
+    <div class="section">
+      <div class="section-head">
+        <span class="step-pill">Step 05</span>
+        <h2 class="s-title">What <code style="font-family:'Geist Mono',monospace;font-size:22px;background:var(--bg-2);padding:2px 10px;border-radius:4px">/crystallize</code> <em>builds for you.</em></h2>
+        <p class="s-body">Eight artifacts. Atomic — all created together, never partial. The raw chaos archives in alongside.</p>
+      </div>
+      <div class="art-grid">
+        <div class="art-cell">
+          <div class="art-icon">01</div>
+          <div class="art-name">docs/product-brief.md</div>
+          <div class="art-desc">The brief, written in your own words, in a template adapted to your project type.</div>
+        </div>
+        <div class="art-cell">
+          <div class="art-icon">02</div>
+          <div class="art-name">PROJECT_HUB.json</div>
+          <div class="art-desc">Single source of truth — sessions, backlog, decisions, bugs, rules, integrations, Gantt.</div>
+        </div>
+        <div class="art-cell">
+          <div class="art-icon">03</div>
+          <div class="art-name">project-hub.html</div>
+          <div class="art-desc">Live dashboard that reads the hub JSON. Dusk + morning themes. Serve over HTTP.</div>
+        </div>
+        <div class="art-cell">
+          <div class="art-icon">04</div>
+          <div class="art-name">index.html</div>
+          <div class="art-desc">Redirect so the bare URL serves the dashboard. No more typing /project-hub.html.</div>
+        </div>
+        <div class="art-cell">
+          <div class="art-icon">05</div>
+          <div class="art-name">CLAUDE.md</div>
+          <div class="art-desc">Agent context. Every agent on this project reads it first. Project-specific.</div>
+        </div>
+        <div class="art-cell">
+          <div class="art-icon">06</div>
+          <div class="art-name">SESSION_NOTES.md</div>
+          <div class="art-desc">Mid-session staging for rules, decisions, bugs. Swept into the hub at session close.</div>
+        </div>
+        <div class="art-cell">
+          <div class="art-icon">07</div>
+          <div class="art-name">docs/ specs/ logs/</div>
+          <div class="art-desc">Empty scaffold folders. Drop product docs, agent task specs, and end-of-session logs as you work.</div>
+        </div>
+        <div class="art-cell">
+          <div class="art-icon">08</div>
+          <div class="art-name">_archive/kickoff-inbox/</div>
+          <div class="art-desc">Your raw chaos preserved permanently — every dump, every attachment, every link.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 06 CHEAT SHEET -->
+  <div class="page" id="cheat">
+    <div class="section">
+      <div class="section-head">
+        <span class="step-pill">Cheat sheet</span>
+        <h2 class="s-title">Every command, <em>every trigger.</em></h2>
+        <p class="s-body">All the commands and natural-language triggers FLOW listens for. Print this. Keep it on your second monitor.</p>
+      </div>
+      <table class="cheat-table">
+        <thead>
+          <tr>
+            <th>Command</th>
+            <th>What it does</th>
+            <th class="when">When to use it</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>/spinup</code></td>
+            <td>Opens a chaos inbox in the current folder. Drops anything you give it. Re-extracts the picture each time.</td>
+            <td class="when">You're in chaos — scattered inputs, half-formed idea.</td>
+          </tr>
+          <tr>
+            <td><code>/spinup show</code></td>
+            <td>Prints the current STATUS.md without adding a dump.</td>
+            <td class="when">You want to peek at what FLOW has extracted so far.</td>
+          </tr>
+          <tr>
+            <td><code>/crystallize</code></td>
+            <td>Reads the inbox, scaffolds 8 artifacts, archives the chaos.</td>
+            <td class="when">When the inbox picture is clear enough to scaffold.</td>
+          </tr>
+          <tr>
+            <td><code>/crystallize dry-run</code></td>
+            <td>Prints what would be created. Writes nothing.</td>
+            <td class="when">You want to preview the scaffold before committing.</td>
+          </tr>
+          <tr>
+            <td><code>/project-strategy</code></td>
+            <td>Brain-dump in one shot. FLOW distills into a clean brief.</td>
+            <td class="when">You can articulate the project in prose but not in bullets.</td>
+          </tr>
+          <tr>
+            <td><code>/new-project</code></td>
+            <td>Structured Q&amp;A. Scaffolds the project immediately.</td>
+            <td class="when">You know the name, stack, deadline, and want the scaffold now.</td>
+          </tr>
+          <tr>
+            <td><code>"morning kickoff"</code></td>
+            <td>Reads the hub. Surfaces priorities. Proposes top-3 plan.</td>
+            <td class="when">Start of any work session on an existing project.</td>
+          </tr>
+          <tr>
+            <td><code>"note: anything"</code></td>
+            <td>Captures rules, bugs, decisions, tasks, research. Routes each to the right place.</td>
+            <td class="when">Mid-session — anytime something matters that would otherwise get lost.</td>
+          </tr>
+          <tr>
+            <td><code>"session close"</code> · <code>"quick close"</code></td>
+            <td>Updates the hub, logs the session, syncs the dashboard, sweeps SESSION_NOTES.md.</td>
+            <td class="when">End of every work session.</td>
+          </tr>
+          <tr>
+            <td><code>"evening research"</code></td>
+            <td>Searches, synthesizes, writes NEXT_SESSION.md for tomorrow's kickoff.</td>
+            <td class="when">When you flagged something to look into before tomorrow.</td>
+          </tr>
+          <tr>
+            <td><code>"sync docs"</code></td>
+            <td>Cascades a decision through all tracked product/strategy docs.</td>
+            <td class="when">After a decision lands that affects the brief, PRD, or tech spec.</td>
+          </tr>
+          <tr>
+            <td><code>"generate Gantt"</code></td>
+            <td>Builds a phased timeline from your strategy docs and your deadline.</td>
+            <td class="when">After your brief and PRD are filled in.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- CTA STRIP -->
+  <div class="page">
+    <div class="section" style="padding: 48px 0 80px;">
+      <div class="cta-strip">
+        <div class="cta-text">
+          <h4>Ready to <em style="font-style:italic">/spinup?</em></h4>
+          <p>Install the FLOW Plugin, open a new Claude session in any folder, and dump whatever you have.</p>
+        </div>
+        <div>
+          <a href="https://github.com/binkybink1/FLOW/releases/latest" class="btn-primary">Download flow.plugin</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-left">
+    <svg viewBox="0 0 92 92" width="16" height="16" xmlns="http://www.w3.org/2000/svg">
+      <defs><mask id="fm"><rect width="92" height="92" fill="white"/><circle cx="46" cy="46" r="26" fill="black"/><rect x="6" y="14" width="22" height="10" transform="rotate(-45 17 19)" fill="black"/></mask></defs>
+      <circle cx="46" cy="46" r="46" fill="var(--ink-4)" mask="url(#fm)"/>
+    </svg>
+    <span class="footer-brand">FLOW · Quick Start</span>
+  </div>
+  <div class="footer-right">Method · Plugin · Blog · Community</div>
+</footer>
+
+<script>
+  function setTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    document.getElementById('btn-dusk').classList.toggle('active', t === 'dusk');
+    document.getElementById('btn-morning').classList.toggle('active', t === 'morning');
+    localStorage.setItem('flow-theme', t);
+  }
+  (function () {
+    var saved = localStorage.getItem('flow-theme') || 'dusk';
+    setTheme(saved);
+  })();
+
+  // PHASE WALKTHROUGH
+  function showPhase(phase) {
+    document.querySelectorAll('.phase-card').forEach(function (el) {
+      el.classList.toggle('active', el.dataset.phase === phase);
+    });
+    document.querySelectorAll('.phase-detail').forEach(function (el) {
+      el.classList.toggle('active', el.id === 'detail-' + phase);
+    });
+  }
+  document.querySelectorAll('.phase-card').forEach(function (el) {
+    el.addEventListener('click', function () { showPhase(el.dataset.phase); });
+  });
+
+  // DUMP EXAMPLE TABS
+  function showDump(dump) {
+    document.querySelectorAll('.dump-tab').forEach(function (el) {
+      el.classList.toggle('active', el.dataset.dump === dump);
+    });
+    document.querySelectorAll('.dump-panel').forEach(function (el) {
+      el.classList.toggle('active', el.id === 'dump-' + dump);
+    });
+  }
+  document.querySelectorAll('.dump-tab').forEach(function (el) {
+    el.addEventListener('click', function () { showDump(el.dataset.dump); });
+  });
+</script>
+
+</body>
+</html>
